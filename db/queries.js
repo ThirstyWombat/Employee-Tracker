@@ -25,7 +25,7 @@ function showDepartments() {
   });
 }
 function showRoles() {
-  const sql = `SELECT roles.id AS id, roles.title AS Title, departments.department_name as Department, roles.salary as Salary
+  const sql = `SELECT roles.id AS id, roles.title AS Title, departments.department as Department, roles.salary as Salary
    FROM roles 
    JOIN departments ON roles.department_id = departments.id`;
   db.query(sql, function (err, results) {
@@ -39,7 +39,7 @@ function showRoles() {
 
 function showEmployees() {
   const sql = `SELECT employees.id AS id, employees.first_name AS first_name, employees.last_name AS last_name, roles.title AS Title,
-  departments.department_name as Department, roles.salary as Salary, concat(manager.first_name, ' ',manager.last_name) as Manager
+  departments.department as Department, roles.salary as Salary, concat(manager.first_name, ' ',manager.last_name) as Manager
   FROM roles
   JOIN employees ON roles.id = employees.role_id
   JOIN departments ON roles.department_id = departments.id
@@ -54,10 +54,23 @@ function showEmployees() {
     }
   });
 }
-// showDepartments();
+
+function addDepartment(department) {
+  db.query(
+    `INSERT INTO departments (department)
+  VALUES ("${department}")`,
+    function (err, result) {
+      if (err) {
+        console.log(err);
+      }
+      console.table(result);
+    }
+  );
+}
 
 module.exports = {
   showDepartments: showDepartments,
   showRoles: showRoles,
   showEmployees: showEmployees,
+  addDepartment: addDepartment,
 };

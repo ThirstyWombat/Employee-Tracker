@@ -10,6 +10,7 @@ const {
   showDepartments: showDepartments,
   showRoles: showRoles,
   showEmployees: showEmployees,
+  addDepartment: addDepartment,
 } = require("./db/queries");
 const questions = [
   {
@@ -20,13 +21,22 @@ const questions = [
       "View All Departments",
       "View All Roles",
       "View All Employees",
+      "Add Department",
       "Quit",
     ],
+  },
+  {
+    type: "input",
+    name: "department",
+    message: "Enter a name for the department you wish to add.",
+    when: (answers) => answers.option === "Add Department",
   },
 ];
 
 function init() {
   inquirer.prompt(questions).then((answers) => {
+    let department = answers.department;
+    console.log(department);
     switch (answers.option) {
       case "View All Departments":
         showDepartments();
@@ -39,14 +49,11 @@ function init() {
         break;
       case "Quit":
         process.exit();
+      case "Add Department":
+        addDepartment(department);
+
+      // console.log(answers.department);
     }
-    // if (answers.option === "View All Departments") {
-    //   showDepartments();
-    // } else if (answers.option === "View All Roles") {
-    //   showRoles();
-    // } else {
-    //   process.exit();
-    // }
   });
 }
 
