@@ -4,6 +4,7 @@
 //use the when type to loop into another question if the user selects add role, add department, add employee, update employee role
 // after picking from the list, it will display the relevant info and a .then to run inquirer again?
 //concat(employees.first_name, ' ',employees.last_name)
+//on init, execute a query that pulls the contents of the department column from departmets, and puts it in an array to be used as the choices for a prompt
 const inquirer = require("inquirer");
 require("dotenv").config();
 const {
@@ -11,32 +12,54 @@ const {
   showRoles: showRoles,
   showEmployees: showEmployees,
   addDepartment: addDepartment,
+  generateDepartments: generateDepartments,
 } = require("./db/queries");
-const questions = [
-  {
-    type: "list",
-    name: "option",
-    message: "What would you like to do?",
-    choices: [
-      "View All Departments",
-      "View All Roles",
-      "View All Employees",
-      "Add Department",
-      "Quit",
-    ],
-  },
-  {
-    type: "input",
-    name: "department",
-    message: "Enter a name for the department you wish to add.",
-    when: (answers) => answers.option === "Add Department",
-  },
-];
 
-function init() {
+async function init() {
+  const questions = [
+    {
+      type: "list",
+      name: "option",
+      message: "What would you like to do?",
+      choices: [
+        "View All Departments",
+        "View All Roles",
+        "View All Employees",
+        "Add Department",
+        "Add Role",
+        "Quit",
+      ],
+    },
+    {
+      type: "input",
+      name: "department",
+      message: "Enter a name for the department you wish to add.",
+      when: (answers) => answers.option === "Add Department",
+    },
+    {
+      type: "input",
+      name: "roleName",
+      message: "Enter a name for the role you wish to add.",
+      when: (answers) => answers.option === "Add Role",
+    },
+    {
+      type: "number",
+      name: "roleSalary",
+      message: "Enter a salary for the role you wish to add.",
+      when: (answers) => answers.option === "Add Role",
+    },
+    {
+      type: "list",
+      name: "roleDepartment",
+      message: "Which department does the role belong to?",
+      choices: await generateDepartments(),
+      when: (answers) => answers.option === "Add Role",
+    },
+  ];
+
   inquirer.prompt(questions).then((answers) => {
     let department = answers.department;
-    console.log(department);
+
     switch (answers.option) {
       case "View All Departments":
         showDepartments();
@@ -51,8 +74,6 @@ function init() {
         process.exit();
       case "Add Department":
         addDepartment(department);
-
-      // console.log(answers.department);
     }
   });
 }

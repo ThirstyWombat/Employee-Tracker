@@ -1,4 +1,5 @@
 const mysql = require("mysql2");
+
 require("dotenv").config({ path: "../.env" });
 
 // console.log("---->", process.env.DB_NAME);
@@ -21,6 +22,7 @@ function showDepartments() {
       console.log(err);
     } else {
       console.table(results);
+      // console.log(results.map((test) => test.department));
     }
   });
 }
@@ -63,14 +65,21 @@ function addDepartment(department) {
       if (err) {
         console.log(err);
       }
-      console.table(result);
+      console.log("New department added to the database");
     }
   );
 }
 
+async function generateDepartments() {
+  const results = await db.promise().query("SELECT * FROM departments");
+  return results[0].map((table) => table.department);
+}
+
+// showDepartments();
 module.exports = {
   showDepartments: showDepartments,
   showRoles: showRoles,
   showEmployees: showEmployees,
   addDepartment: addDepartment,
+  generateDepartments: generateDepartments,
 };
