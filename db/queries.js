@@ -82,6 +82,18 @@ async function addRole(name, department, salary) {
   });
 }
 
+async function addEmployee(first_name, last_name, role_id, manager_id) {
+  let sql = `INSERT INTO employees (first_name, last_name, role_id, manager_id)
+  VALUES ("${first_name}","${last_name}",${role_id},${manager_id})`;
+  db.query(sql, function (err, results) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(`${first_name} ${last_name} added to database`);
+    }
+  });
+}
+
 async function generateDepartments() {
   const results = await db.promise().query("SELECT * FROM departments");
   return results[0].map((table) => ({
@@ -90,7 +102,32 @@ async function generateDepartments() {
   }));
 }
 
-// showDepartments();
+async function generateRoles() {
+  const results = await db.promise().query("SELECT * FROM roles");
+  return results[0].map((table) => ({ value: table.id, name: table.title }));
+}
+
+async function generateManagers() {
+  const results = await db.promise().query("SELECT * FROM employees");
+  return results[0].map((table) => ({
+    value: table.id,
+    name: `${table.first_name} ${table.last_name}`,
+  }));
+}
+
+async function updateRole(role_id, employee_id) {
+  let sql = `UPDATE employees 
+SET role_id = ${role_id}
+WHERE id = ${employee_id}`;
+  db.query(sql, function (err, results) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(`Updated employee's role.`);
+    }
+  });
+}
+
 module.exports = {
   showDepartments: showDepartments,
   showRoles: showRoles,
@@ -98,4 +135,8 @@ module.exports = {
   addDepartment: addDepartment,
   generateDepartments: generateDepartments,
   addRole: addRole,
+  generateRoles: generateRoles,
+  generateManagers: generateManagers,
+  addEmployee: addEmployee,
+  updateRole: updateRole,
 };

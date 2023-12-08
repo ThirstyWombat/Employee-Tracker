@@ -17,8 +17,17 @@ const {
   addDepartment: addDepartment,
   generateDepartments: generateDepartments,
   addRole: addRole,
+  generateRoles: generateRoles,
+  generateManagers: generateManagers,
+  addEmployee: addEmployee,
+  updateRole: updateRole,
 } = require("./db/queries");
 
+async function managerList() {
+  let list = await generateManagers();
+  list.push({ value: null, name: "None" });
+  return list;
+}
 async function init() {
   const questions = [
     {
@@ -31,6 +40,8 @@ async function init() {
         "View All Employees",
         "Add Department",
         "Add Role",
+        "Add Employee",
+        "Update Employee Role",
         "Quit",
       ],
     },
@@ -59,6 +70,46 @@ async function init() {
       choices: await generateDepartments(),
       when: (answers) => answers.option === "Add Role",
     },
+    {
+      type: "input",
+      name: "employeeFirst",
+      message: "Enter a fist name for the employee you wish to add.",
+      when: (answers) => answers.option === "Add Employee",
+    },
+    {
+      type: "input",
+      name: "employeeLast",
+      message: "Enter a last name for the employee you wish to add.",
+      when: (answers) => answers.option === "Add Employee",
+    },
+    {
+      type: "list",
+      name: "employeeRole",
+      message: "What role does the employee belong to?",
+      choices: await generateRoles(),
+      when: (answers) => answers.option === "Add Employee",
+    },
+    {
+      type: "list",
+      name: "employeeManager",
+      message: "Who is the employee's manager?",
+      choices: await managerList(),
+      when: (answers) => answers.option === "Add Employee",
+    },
+    {
+      type: "list",
+      name: "employeeToUpdate",
+      message: "Which employee's role do you wish to update?",
+      choices: await generateManagers(),
+      when: (answers) => answers.option === "Update Employee Role",
+    },
+    {
+      type: "list",
+      name: "employeeNewRole",
+      message: "Which role do you want to assign the selected employee?",
+      choices: await generateRoles(),
+      when: (answers) => answers.option === "Update Employee Role",
+    },
   ];
 
   inquirer.prompt(questions).then((answers) => {
@@ -80,8 +131,18 @@ async function init() {
         addDepartment(department);
         break;
       case "Add Role":
-        console.log(answers.roleDepartment);
         addRole(answers.roleName, answers.roleDepartment, answers.roleSalary);
+        break;
+      case "Add Employee":
+        addEmployee(
+          answers.employeeFirst,
+          answers.employeeLast,
+          answers.employeeRole,
+          answers.employeeManager
+        );
+        break;
+      case "Update Employee Role":
+        updateRole(answers.employeeNewRole, answers.employeeToUpdate);
     }
   });
 }
