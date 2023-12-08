@@ -70,9 +70,24 @@ function addDepartment(department) {
   );
 }
 
+async function addRole(name, department, salary) {
+  let sql = `INSERT INTO roles (title, department_id, salary)
+   VALUES ("${name}",${department},${salary})`;
+  db.query(sql, function (err, results) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("New role added to the database");
+    }
+  });
+}
+
 async function generateDepartments() {
   const results = await db.promise().query("SELECT * FROM departments");
-  return results[0].map((table) => table.department);
+  return results[0].map((table) => ({
+    value: table.id,
+    name: table.department,
+  }));
 }
 
 // showDepartments();
@@ -82,4 +97,5 @@ module.exports = {
   showEmployees: showEmployees,
   addDepartment: addDepartment,
   generateDepartments: generateDepartments,
+  addRole: addRole,
 };

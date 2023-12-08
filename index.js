@@ -5,6 +5,9 @@
 // after picking from the list, it will display the relevant info and a .then to run inquirer again?
 //concat(employees.first_name, ' ',employees.last_name)
 //on init, execute a query that pulls the contents of the department column from departmets, and puts it in an array to be used as the choices for a prompt
+//for the addRole function, create an initial query which selects the id associated with the department name parameter and saves it to a variable
+//use that use that id variable as the department_id when insterting into the roles table
+// await generateDepartments(),
 const inquirer = require("inquirer");
 require("dotenv").config();
 const {
@@ -13,6 +16,7 @@ const {
   showEmployees: showEmployees,
   addDepartment: addDepartment,
   generateDepartments: generateDepartments,
+  addRole: addRole,
 } = require("./db/queries");
 
 async function init() {
@@ -74,6 +78,10 @@ async function init() {
         process.exit();
       case "Add Department":
         addDepartment(department);
+        break;
+      case "Add Role":
+        console.log(answers.roleDepartment);
+        addRole(answers.roleName, answers.roleDepartment, answers.roleSalary);
     }
   });
 }
