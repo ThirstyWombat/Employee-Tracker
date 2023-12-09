@@ -1,8 +1,10 @@
 # Employee-Tracker
 
+![employee tracker](https://github.com/ThirstyWombat/Employee-Tracker/assets/122827259/9055269f-e917-4b43-9a13-32274362c97c)
+
 ## Demo
 
-<a href="">Demonstration Video</a>
+<a href="https://drive.google.com/file/d/1iL9XvGKGWQhS1u0hKekYpoAbUlyG_Mbx/view">Demonstration Video</a>
 
 ## Description
 
