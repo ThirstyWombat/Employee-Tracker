@@ -1,13 +1,3 @@
-// create three tables, department, roles, and employees
-//initial inquirer prompt is a list of the questions
-//show the database info using ui.log.write?
-//use the when type to loop into another question if the user selects add role, add department, add employee, update employee role
-// after picking from the list, it will display the relevant info and a .then to run inquirer again?
-//concat(employees.first_name, ' ',employees.last_name)
-//on init, execute a query that pulls the contents of the department column from departmets, and puts it in an array to be used as the choices for a prompt
-//for the addRole function, create an initial query which selects the id associated with the department name parameter and saves it to a variable
-//use that use that id variable as the department_id when insterting into the roles table
-// await generateDepartments(),
 const inquirer = require("inquirer");
 require("dotenv").config();
 const {
